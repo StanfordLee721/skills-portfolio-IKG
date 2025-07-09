@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWOT Analysis - Lee Chia-Feng for IKG Security Engineer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --strengths-primary: #27ae60;
+            --strengths-secondary: #2ecc71;
+            --strengths-accent: #1e8449;
+            --weaknesses-primary: #e74c3c;
+            --weaknesses-secondary: #c0392b;
+            --opportunities-primary: #3498db;
+            --opportunities-secondary: #2980b9;
+            --threats-primary: #f39c12;
+            --threats-secondary: #e67e22;
+            --glass-white: rgba(255, 255, 255, 0.1);
+            --glass-white-strong: rgba(255, 255, 255, 0.2);
+            --text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            padding: 15px;
+            color: #2c3e50;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 動態背景粒子效果 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(52, 152, 219, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(155, 89, 182, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 60% 20%, rgba(46, 204, 113, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-20px, -10px) rotate(1deg); }
+            66% { transform: translate(20px, 10px) rotate(-1deg); }
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            background: linear-gradient(135deg, 
+                rgba(26, 37, 47, 0.95) 0%, 
+                rgba(44, 62, 80, 0.95) 50%,
+                rgba(52, 73, 94, 0.95) 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                conic-gradient(from 0deg, 
+                    transparent 0deg, 
+                    rgba(52, 152, 219, 0.1) 90deg, 
+                    transparent 180deg, 
+                    rgba(155, 89, 182, 0.1) 270deg, 
+                    transparent 360deg);
+            animation: rotate 30s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            margin-bottom: 20px;
+            font-weight: 900;
+            text-shadow: var(--text-shadow);
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #fff, #e3f2fd, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header h2 {
+            font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+            opacity: 0.95;
+            font-weight: 500;
+            margin-bottom: 15px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            opacity: 0.85;
+            font-style: italic;
+            font-weight: 300;
+            line-height: 1.4;
+        }
+
+        .swot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2px;
+            min-height: 90vh;
+            background: linear-gradient(45deg, 
+                rgba(189, 195, 199, 0.3), 
+                rgba(149, 165, 166, 0.3));
+        }
+
+        .swot-quadrant {
+            padding: 40px;
+            position: relative;
+            overflow-y: auto;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .swot-quadrant::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+
+        .swot-quadrant:hover::before {
+            opacity: 1;
+        }
+
+        .swot-quadrant:hover {
+            transform: scale(1.02);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        /* 優勢區域 - 綠色漸層融合 */
+        .strengths {
+            background: linear-gradient(135deg, 
+                var(--strengths-primary) 0%, 
+                var(--strengths-secondary) 50%,
+                rgba(46, 204, 113, 0.9) 100%);
+            color: white;
+            border: 2px solid var(--strengths-accent);
+            position: relative;
+        }
+
+        .strengths::before {
+            background: linear-gradient(45deg, 
+                rgba(255, 255, 255, 0.2) 0%, 
+                transparent 50%, 
+                rgba(39, 174, 96, 0.3) 100%);
+        }
+
+        /* 劣勢區域 - 紅色漸層融合 */
+        .weaknesses {
+            background: linear-gradient(135deg, 
+                var(--weaknesses-primary) 0%, 
+                var(--weaknesses-secondary) 50%,
+                rgba(192, 57, 43, 0.9) 100%);
+            color: white;
+        }
+
+        .weaknesses::before {
+            background: linear-gradient(45deg, 
+                rgba(255, 255, 255, 0.15) 0%, 
+                transparent 50%, 
+                rgba(231, 76, 60, 0.2) 100%);
+        }
+
+        /* 機會區域 - 藍色漸層融合 */
+        .opportunities {
+            background: linear-gradient(135deg, 
+                var(--opportunities-primary) 0%, 
+                var(--opportunities-secondary) 50%,
+                rgba(41, 128, 185, 0.9) 100%);
+            color: white;
+        }
+
+        .opportunities::before {
+            background: linear-gradient(45deg, 
+                rgba(255, 255, 255, 0.15) 0%, 
+                transparent 50%, 
+                rgba(52, 152, 219, 0.2) 100%);
+        }
+
+        /* 威脅區域 - 橙色漸層融合 */
+        .threats {
+            background: linear-gradient(135deg, 
+                var(--threats-primary) 0%, 
+                var(--threats-secondary) 50%,
+                rgba(230, 126, 34, 0.9) 100%);
+            color: white;
+        }
+
+        .threats::before {
+            background: linear-gradient(45deg, 
+                rgba(255, 255, 255, 0.15) 0%, 
+                transparent 50%, 
+                rgba(243, 156, 18, 0.2) 100%);
+        }
+
+        .quadrant-header {
+            font-size: clamp(1.8rem, 3vw, 2.4rem);
+            font-weight: 900;
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: var(--text-shadow);
+            border-bottom: 3px solid rgba(255, 255, 255, 0.4);
+            padding-bottom: 20px;
+            position: relative;
+            color: white;
+            z-index: 3;
+        }
+
+        .quadrant-header::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, white, transparent);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+            to { box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
+        }
+
+        .strengths .quadrant-header {
+            background: none;
+            color: white;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+
+        .quadrant-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .item {
+            background: var(--glass-white);
+            padding: 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent);
+            transition: left 0.6s ease;
+        }
+
+        .item:hover::before {
+            left: 100%;
+        }
+
+        .strengths .item {
+            background: var(--glass-white-strong);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .item:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .strengths .item:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        .item-title {
+            font-weight: 800;
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            margin-bottom: 15px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            line-height: 1.3;
+        }
+
+        .strengths .item-title {
+            font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .item-details {
+            font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+            line-height: 1.7;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .strengths .item-details {
+            font-size: clamp(1rem, 1.9vw, 1.15rem);
+            opacity: 1;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .item-details strong {
+            font-weight: 800;
+            text-decoration: underline;
+            text-decoration-color: rgba(255, 255, 255, 0.6);
+            text-underline-offset: 3px;
+        }
+
+        .icon {
+            font-size: clamp(1.8rem, 3vw, 2.4rem);
+            margin-right: 15px;
+            vertical-align: middle;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .strengths .icon {
+            font-size: clamp(2rem, 3.2vw, 2.6rem);
+            filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.4));
+        }
+
+        .highlight-badge {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            background: linear-gradient(135deg, 
+                #f1c40f 0%, 
+                #f39c12 50%, 
+                #e67e22 100%);
+            color: #2c3e50;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 20px rgba(241, 196, 15, 0.4);
+            animation: pulse 2.5s infinite;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.05) rotate(1deg); }
+        }
+
+        .strengths-banner {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: linear-gradient(135deg, 
+                #f1c40f 0%, 
+                #e67e22 50%, 
+                #d35400 100%);
+            color: #2c3e50;
+            padding: 18px 40px 18px 35px;
+            clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
+            font-weight: 900;
+            font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 6px 20px rgba(241, 196, 15, 0.3);
+            border-bottom: 3px solid rgba(211, 84, 0, 0.8);
+            z-index: 10;
+            min-width: 190px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* 響應式設計優化 */
+        @media (max-width: 1200px) {
+            .swot-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(4, auto);
+                min-height: auto;
+            }
+            
+            .swot-quadrant {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .swot-quadrant {
+                padding: 20px;
+            }
+            
+            .quadrant-header {
+                letter-spacing: 2px;
+            }
+            
+            .strengths-banner {
+                padding: 15px 35px 15px 30px;
+                font-size: 0.8rem;
+                letter-spacing: 1px;
+                min-width: 170px;
+                clip-path: polygon(12% 0%, 100% 0%, 100% 100%, 0% 100%);
+            }
+        }
+
+        /* 滾動條自定義 */
+        .swot-quadrant::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .swot-quadrant::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .swot-quadrant::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .swot-quadrant::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>🎯 STRATEGIC SWOT ANALYSIS</h1>
+                <h2>Lee Chia-Feng | IKG Team Taiwan Limited Security Engineer</h2>
+                <div class="subtitle">6+ Years Security Expert | Systems Thinking & Neural Network Architecture | Python Analytics & Model Development</div>
+            </div>
+        </div>
+        
+        <div class="swot-grid">
+            <div class="swot-quadrant strengths">
+                <div class="strengths-banner">KEY ADVANTAGES</div>
+                <div class="quadrant-header">
+                    <span class="icon">💪</span>STRENGTHS
+                </div>
+                <div class="quadrant-content">
+                    <div class="item">
+                        <div class="highlight-badge">PERFECT MATCH</div>
+                        <div class="item-title">🎯 Web Application Security Mastery</div>
+                        <div class="item-details">
+                            • <strong>6+ years</strong> penetration testing expertise<br>
+                            • <strong>NodeJS/ReactJS specialist</strong> - Direct alignment with IKG needs<br>
+                            • <strong>50+ successful projects</strong> across finance, healthcare, e-commerce<br>
+                            • <strong>OWASP Top 10 expert</strong> with real-world application<br>
+                            • Advanced vulnerability assessment and remediation
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="highlight-badge">GAME CHANGER</div>
+                        <div class="item-title">🧠 Exceptional Cross-Domain Learning</div>
+                        <div class="item-details">
+                            • <strong>Systems Thinking Mastery:</strong> Medical field complexity → Security architecture logic<br>
+                            • <strong>Python Analytics:</strong> User behavior analysis with neural network insights<br>
+                            • <strong>Data Mining/Warehousing:</strong> High-availability model architecture for security applications<br>
+                            • <strong>Rapid Framework Development:</strong> Scalable solutions for security and development teams<br>
+                            • Cross-disciplinary problem-solving methodology transfer
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="highlight-badge">GLOBAL READY</div>
+                        <div class="item-title">🌐 International Communication Excellence</div>
+                        <div class="item-details">
+                            • <strong>20+ technical conferences</strong> interpretation experience<br>
+                            • Expert at translating complex technical concepts<br>
+                            • <strong>Cross-cultural team collaboration</strong> proven track record<br>
+                            • Bridge communication gaps in distributed teams<br>
+                            • Stakeholder engagement and presentation skills
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="highlight-badge">IMMEDIATE VALUE</div>
+                        <div class="item-title">🛠️ Advanced Security Tools Expertise</div>
+                        <div class="item-details">
+                            • <strong>Burp Suite Professional master</strong> - Ready for DAST<br>
+                            • NESSUS vulnerability management expert<br>
+                            • Custom security tool development capability<br>
+                            • <strong>SAST tool integration ready</strong> (SonarQube, Fortify)<br>
+                            • Security automation and process optimization
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="swot-quadrant weaknesses">
+                <div class="quadrant-header">
+                    <span class="icon">⚠️</span>WEAKNESSES
+                </div>
+                <div class="quadrant-content">
+                    <div class="item">
+                        <div class="item-title">☁️ Limited AWS Cloud Security Experience</div>
+                        <div class="item-details">
+                            • No current AWS security certifications<br>
+                            • Limited hands-on cloud infrastructure security<br>
+                            • Basic understanding of IAM, VPC, Security Groups<br>
+                            <strong>🚀 Mitigation:</strong> AWS Security Specialty certification within 30 days + hands-on lab environment
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">🔄 DevOps Integration Learning Curve</div>
+                        <div class="item-details">
+                            • Limited CI/CD security pipeline experience<br>
+                            • DevSecOps methodology gap<br>
+                            <strong>🚀 Mitigation:</strong> 60-day CI/CD security integration masterplan with prototype development
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">🎮 Gaming Industry Specifics</div>
+                        <div class="item-details">
+                            • No gaming security specialization yet<br>
+                            • Anti-cheat technology learning needed<br>
+                            • Gaming compliance requirements study required<br>
+                            <strong>🚀 Mitigation:</strong> Rapid gaming security expertise development plan
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="swot-quadrant opportunities">
+                <div class="quadrant-header">
+                    <span class="icon">🚀</span>OPPORTUNITIES
+                </div>
+                <div class="quadrant-content">
+                    <div class="item">
+                        <div class="item-title">🎯 Perfect Strategic Role Alignment</div>
+                        <div class="item-details">
+                            • Core web security skills match IKG's immediate needs<br>
+                            • International team environment suits communication strengths<br>
+                            • Growth trajectory aligns with career aspirations<br>
+                            • Opportunity to contribute from day 1 while expanding expertise
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">🎮 Gaming Security Market Leadership</div>
+                        <div class="item-details">
+                            • Taiwan gaming industry rapid expansion with AI/ML integration trends<br>
+                            • <strong>Analytical Framework Advantage:</strong> Python-based user behavior modeling for anti-cheat systems<br>
+                            • <strong>High-Availability Architecture:</strong> Scalable security models for real-time gaming environments<br>
+                            • <strong>Data Mining Expertise:</strong> Advanced threat pattern recognition and predictive security<br>
+                            • Industry leadership in data-driven gaming security innovation
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">🌉 DevSecOps Bridge Building</div>
+                        <div class="item-details">
+                            • Bridge security and development teams effectively<br>
+                            • Create efficient, non-disruptive security processes<br>
+                            • Security-development integration innovation leadership<br>
+                            • Team capability multiplication through knowledge transfer
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">📈 Long-term Leadership Growth</div>
+                        <div class="item-details">
+                            • Security team leadership development path<br>
+                            • Strategic contribution to IKG's competitive advantage<br>
+                            • <strong>AI/LLM Integration:</strong> Security applications in emerging technologies<br>
+                            • Innovation catalyst bridging traditional security with startup innovation
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">🤖 Emerging Technology Integration</div>
+                        <div class="item-details">
+                            • <strong>Neural Network Architecture:</strong> Security model design with high availability focus<br>
+                            • <strong>Data-Driven Security:</strong> Python-based user behavior analytics and threat detection<br>
+                            • <strong>Scalable Framework Development:</strong> Reusable security models for development teams<br>
+                            • <strong>Cross-Domain Logic Transfer:</strong> Medical systems thinking → Gaming security innovation<br>
+                            • Ready to architect next-generation AI-powered security solutions
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="swot-quadrant threats">
+                <div class="quadrant-header">
+                    <span class="icon">⚡</span>THREATS
+                </div>
+                <div class="quadrant-content">
+                    <div class="item">
+                        <div class="item-title">☁️ Cloud-Native Security Specialists</div>
+                        <div class="item-details">
+                            • Candidates with existing AWS certifications and experience<br>
+                            • Cloud security implementation track records<br>
+                            <strong>💡 Differentiation:</strong> Deep security fundamentals + fresh innovative perspectives
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">🎮 Gaming Industry Veterans</div>
+                        <div class="item-details">
+                            • Experienced gaming security professionals<br>
+                            • Anti-cheat system specialists with domain knowledge<br>
+                            <strong>💡 Differentiation:</strong> Rapid learning capability + broader security expertise depth
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">🔄 DevSecOps Integration Experts</div>
+                        <div class="item-details">
+                            • Candidates with extensive CI/CD security experience<br>
+                            • Proven DevSecOps methodology implementation<br>
+                            <strong>💡 Differentiation:</strong> Strong security foundation + exceptional communication skills
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">👥 Management Experience Candidates</div>
+                        <div class="item-details">
+                            • Security team leadership experience<br>
+                            • Established management track records<br>
+                            <strong>💡 Differentiation:</strong> Technical depth + mentorship potential + fresh energy
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
